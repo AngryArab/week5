@@ -8,6 +8,53 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+//auth step 1, import modules
+import passport, { deserializeUser } from 'passport';
+import passportLocal from 'passport-local';
+import flash from 'connect-flash';
+//auth step 2, define auth strat;
+
+let localStrategy = passportLocal.Strategy;
+
+//auth step 3 imporet user model
+
+import user from './models/user.js';
+
+//auth step 4, importing route
+
+import authRouter from './routes/auth.route.js';
+
+//austh step 5, setup flash
+
+app.use(flash());
+
+//austh step6, intialize passport and session
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//auth step 7, implment auth strat
+
+passport.use(user.createStrategy());
+
+//aith step 8, setup serialization and deselization
+
+passport.serializeUser(user.serializeUser());
+passport.deserializeUser(user, deserializeUser());
+app.use('/', authRouter);
+
+
+
+app.use('/', movierouter)
+
+
+
+
+
+
+
+
 import mongoose from 'mongoose';
 //mongoose 
 mongoose.connect(MongoURI);
