@@ -11,10 +11,6 @@ const UserSchema = new Schema({
     username: String,
     emailAddress: String
 
-
-
-
-
 },{
     timestamps: true,
     collection:'users'
@@ -22,4 +18,4 @@ const UserSchema = new Schema({
 
 UserSchema.plugin(passportLocalMongoose);
 
-export default mongoose.model('user', UserSchema);
+export default mongoose.model('User', UserSchema); //exports function above 

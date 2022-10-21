@@ -1,0 +1,47 @@
+<div class="container">
+    <h1>Business Contacts List</h1>
+   
+    <div class="row">
+        <div class="col">
+    
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col">Contact Name</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Contact Email</th>
+                        
+                    </tr>
+                </thead>
+                <tbody id="contactList">
+                    
+                    
+                    <% for(let count = 0; count < contacts.length; count++) { %>
+                        <tr>
+                            <th scope="row" class="text-center"><%= count + 1 %></th>
+                            <td><%= contacts[count].contactname %></td>
+                            <td><%= contacts[count].contactnumber %></td>
+                            <td><%= contacts[count].contactemail %></td>
+                            
+                            <% if(displayName) { %>
+                            
+                            <td class="text-center col-1">
+                                <a href="/contact-edit/<%= contacts[count]._id %>"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fas fa-pencil-alt"></i> Edit</a>
+                            </td>
+                            
+                            <td class="text-center col-1">
+                                <a href="/contact-delete/<%= contacts[count]._id %>"
+                                    class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete</a>
+                            </td>
+                            <% } %> 
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
