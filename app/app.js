@@ -9,72 +9,38 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //auth step 1, import modules
-import passport, { deserializeUser } from 'passport';
+import passport from 'passport';
 import passportLocal from 'passport-local';
 import flash from 'connect-flash';
-//auth step 2, define auth strat;
 
+//auth step 2, define auth strat;
 let localStrategy = passportLocal.Strategy;
 
 //auth step 3 imporet user model
-
-import user from './models/user.js';
+import User from '../app/views/content/models/user.js';
 
 //auth step 4, importing route
-
-import authRouter from './routes/auth.route.js';
-
-//austh step 5, setup flash
-
-app.use(flash());
-
-//austh step6, intialize passport and session
-
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-//auth step 7, implment auth strat
-
-passport.use(user.createStrategy());
-
-//aith step 8, setup serialization and deselization
-
-passport.serializeUser(user.serializeUser());
-passport.deserializeUser(user, deserializeUser());
-app.use('/', authRouter);
-
-
-
-app.use('/', movierouter)
-
-
-
-
-
-
-
-
+//importing mongoose
 import mongoose from 'mongoose';
-//mongoose 
-mongoose.connect(MongoURI);
-const db = mongoose.connection;
-//listene for connection success or error
-db.on('open',() => console.log("Connected to mongo db"));
-db.on('error',() => console.log(" mongo error"));
 
-
-
-
-// config mongouri and secret
+// Configuration Module
 import { MongoURI, Secret } from '../config/config.js';
 
-// import the routes
-import indexRouter from './routes/index.route.server.js'
+// importinmg routs
+import indexRouter from './routes/index.route.server.js';
+import contactRouter from './routes/contacts.route.server.js';
+import authRouter from './routes/auth.route.server.js';
 
-
-// instiance express
+// instatiate express app
 const app = express();
+
+// mongo db configuration
+mongoose.connect(MongoURI);
+const db = mongoose.connection;
+
+//if connection is successful or not
+db.on('open', () => console.log("Connected to MongoDB"));
+db.on('error', () => console.log("Mongo Connection Error"));
 
 
 
@@ -82,24 +48,39 @@ const app = express();
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
-//app using modules
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname,'/client')));
 app.use(express.static(path.join(__dirname,'../public')));
+
+
+// auth step 4, use session
 app.use(session({
     secret: Secret,
     saveUninitialized: false, 
     resave: false
 }));
 
+//austh step 5, setup flash
+app.use(flash());
 
-// routing
+//auth step 6, start passport and session
+app.use(passport.initialize());
+app.use(passport.session());
+
+//auth step 7, implment auth strat
+passport.use(User.createStrategy());
+
+//auth step 8, allows serializeation and deserialzier of password
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// using routes
 app.use('/', indexRouter);
-//app.use('/', movieRouter);
+app.use('/', contactRouter);
+app.use('/', authRouter);
+
 
 export default app;
-
